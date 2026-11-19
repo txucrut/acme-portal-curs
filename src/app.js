@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const { requireAuth } = require('./auth');
 const {
-  getClientsSlow,
+  getClientsFast,
   invitations,
   delay,
 } = require('./db');
@@ -20,7 +20,7 @@ function createApp() {
 
   /** Panell admin: lent a propòsit */
   app.get('/api/clients', requireAuth, async (_req, res) => {
-    const data = await getClientsSlow();
+    const data = await getClientsFast();
     res.json({ data, meta: { count: data.length, note: 'endpoint lent (lab)' } });
   });
 
@@ -36,9 +36,9 @@ function createApp() {
       return res.status(400).json({ error: 'Cal name, email i message' });
     }
 
-    if (String(message).toLowerCase().includes('urgent')) {
-      return res.status(500).json({ error: 'Error intern al processar el missatge' });
-    }
+    // if (String(message).toLowerCase().includes('urgent')) {
+    //   return res.status(500).json({ error: 'Error intern al processar el missatge' });
+    // }
 
     return res.status(201).json({
       ok: true,
